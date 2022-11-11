@@ -15,3 +15,4 @@ tsconfig.test.json
 tsconfig.json
 build
 dev
+.npmrc

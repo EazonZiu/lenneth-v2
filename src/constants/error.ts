@@ -1,1 +1,1 @@
-export const LENNETH_ERROR_NAME = "lenneth:error:name";
+export const LENNETH_ERROR_NAME = "lenneth-v2:error:name";

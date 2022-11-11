@@ -64,10 +64,24 @@ export abstract class LennethApplication implements ILennthApplication {
   }
 
   /**
+   * 加载多个拦截器
+   */
+  private async _loadInterceptors() {
+    // 读取拦截器类
+    let Interceptors = LennethSetting.serverSettingMap.get("interceptors");
+    if (Interceptors) {
+      console.log("Interceptors: ", Interceptors);
+      for (const key in Interceptors) {
+        this._loadMiddleware(Interceptors[key]);
+      }
+    }
+  }
+
+  /**
    * bodyParser
    */
   private async _loadBodyParser(): Promise<any> {
-    return new Promise((res, err) => {
+    return new Promise<void>((res, err) => {
       this.app.use(bodyParser());
       res();
     });
@@ -78,7 +92,7 @@ export abstract class LennethApplication implements ILennthApplication {
    */
   private async _loadRouters(): Promise<any> {
     let imports = LennethSetting.serverSettingMap.get("imports");
-    return new Promise((res, err) => {
+    return new Promise<void>((res, err) => {
       // 设置controller 路径
       this.routerService.joinControllerPath(imports);
       // 载入路由
@@ -128,7 +142,9 @@ export abstract class LennethApplication implements ILennthApplication {
         // 这里this指向的是类的原型
         middlewareClass.prototype,
         middlewareFun,
-        middlewareFun[LENNETH_MIDDLEWARE_NAME],
+        middlewareFun[
+          LENNETH_MIDDLEWARE_NAME + ":" + "[" + middlewareClass.name + "]"
+        ],
         this.paramsService.paramsToList
       );
       this.app.use(asyncMiddle);
@@ -140,7 +156,7 @@ export abstract class LennethApplication implements ILennthApplication {
    */
   private async _startServer(): Promise<any> {
     let { hostname, port } = this.lennethSetting.getHttpPort();
-    return new Promise((res, err) => {
+    return new Promise<void>((res, err) => {
       this.app.listen(<number>port, hostname);
       this.logger.info(`app start ${port}`);
       res();
@@ -166,6 +182,7 @@ export abstract class LennethApplication implements ILennthApplication {
       await this._callHook("$onInit");
       // 拦截器
       await this._loadInterceptor();
+      await this._loadInterceptors();
       // 载入中间件
       await this._callHook("$onMountingMiddlewares", undefined, this.app);
       // 载入bodyParser

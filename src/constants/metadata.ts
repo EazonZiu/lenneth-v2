@@ -1,4 +1,4 @@
-export const SERVER_SETTINGS = "lenneth:server:settings";
+export const SERVER_SETTINGS = "lenneth-v2:server:settings";
 
 /** 
  * 原生定义反射类型 

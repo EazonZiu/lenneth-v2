@@ -46,6 +46,10 @@ export class LennethSetting implements IServerSettings {
    * 拦截器
    */
   interceptor: Function;
+  /**
+   * 多个拦截器
+   */
+  interceptors: Function[];
 
   // /**
   //  * 日志文件设置
@@ -86,13 +90,13 @@ export class LennethSetting implements IServerSettings {
         globalError: this.globalError,
         response: this.response,
         logFileSetting: this.logFileSetting,
-        ...propertyKey
+        ...propertyKey,
       };
       // imports 特殊处理
       let _imports = this.imports;
       let imports = setting["imports"];
       setting["imports"] = { ...imports, ..._imports };
-      Object.keys(setting).forEach(key => {
+      Object.keys(setting).forEach((key) => {
         this.setMap(key, setting[key]);
       });
     }

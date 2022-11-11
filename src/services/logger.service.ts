@@ -7,13 +7,13 @@ import {
   LogEvent,
   Layout,
   Appender,
-  BaseAppender
+  BaseAppender,
 } from "ts-log-debug";
 import { LennethSetting } from "@core";
 import {
   ILoggerService,
   ILogTableSettings,
-  ILogFileSetting
+  ILogFileSetting,
 } from "@interfaces";
 import { BaseService } from "./base.service";
 
@@ -40,7 +40,7 @@ class JsonLayout extends BaseLayout {
       categoryName: loggingEvent.categoryName,
       level: loggingEvent.level.toString(),
       data: loggingEvent.data,
-      context: loggingEvent.context
+      context: loggingEvent.context,
     };
     return JSON.stringify(log);
   }
@@ -49,7 +49,7 @@ class JsonLayout extends BaseLayout {
 export class LoggerService implements ILoggerService {
   private _loggerName: string;
 
-  constructor(loggerName: string = "lenneth") {
+  constructor(loggerName: string = "lenneth-v2") {
     this._loggerName = loggerName;
   }
 
@@ -77,13 +77,12 @@ export class LoggerService implements ILoggerService {
     const logger = new Logger(this._loggerName);
 
     const serverSettingMap = LennethSetting.serverSettingMap;
-    let logFileSetting: ILogFileSetting = serverSettingMap.get(
-      "logFileSetting"
-    );
+    let logFileSetting: ILogFileSetting =
+      serverSettingMap.get("logFileSetting");
 
     logger.appenders.set("std-log", {
       type: "LennethConsoleAppender",
-      level: ["debug", "info"]
+      level: ["debug", "info"],
     });
     if (logFileSetting && logFileSetting.useFlag) {
       logger.appenders.set("file-log", {
@@ -93,7 +92,7 @@ export class LoggerService implements ILoggerService {
         backups: logFileSetting.backups || 3,
         compress: true,
         levels: logFileSetting.levels || ["error", "warn"],
-        layout: { type: "customJson" }
+        layout: { type: "customJson" },
       });
     }
 
