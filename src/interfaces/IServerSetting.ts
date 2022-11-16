@@ -10,6 +10,8 @@ export interface IServerSettings extends IBaseInterface {
   port?: string | number;
   // api
   imports?: TImports;
+  // 多个配置类
+  configurations?: Function[];
   // 拦截器
   interceptor?: Function;
   // 多个拦截器

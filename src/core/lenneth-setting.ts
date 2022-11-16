@@ -43,6 +43,10 @@ export class LennethSetting implements IServerSettings {
    */
   @Value(LennethResponse) response: Function;
   /**
+   * 多个配置类
+   */
+  configurations: Function[];
+  /**
    * 拦截器
    */
   interceptor: Function;

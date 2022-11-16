@@ -95,6 +95,7 @@ export const createParamsMapKey = (target: object | any, propertyKey: any) => {
  * @param target 关系this指向
  * @param middleware 新lenneth中间件
  * @param key 存储map key
+ * @param cb
  */
 export const toAsyncMiddleware = (
   target: Object | any,

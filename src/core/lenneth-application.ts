@@ -53,6 +53,20 @@ export abstract class LennethApplication implements ILennthApplication {
   }
 
   /**
+   * 加载多个配置类
+   */
+  private async _loadConfigurations() {
+    // 读取配置类
+    let Configurations = LennethSetting.serverSettingMap.get("configurations");
+    if (Configurations) {
+      console.log("Configurations: ", Configurations);
+      for (const key in Configurations) {
+        this._loadMiddleware(Configurations[key]);
+      }
+    }
+  }
+
+  /**
    * 加载拦截器
    */
   private async _loadInterceptor() {
@@ -180,6 +194,8 @@ export abstract class LennethApplication implements ILennthApplication {
     try {
       // 初始化(DB)
       await this._callHook("$onInit");
+      // 配置类
+      await this._loadConfigurations();
       // 拦截器
       await this._loadInterceptor();
       await this._loadInterceptors();
